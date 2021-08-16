@@ -5,6 +5,23 @@ import (
 	"sync"
 )
 
+type MetricsCollector struct {
+	metricsStorage MetricsStorage
+}
+
+type RequestInfo struct {
+	apiName      string
+	responseTime int64
+	timestamp    int64
+}
+
+func (s *MetricsCollector) recordRequest(info *RequestInfo) {
+	if info == nil || info.apiName == "" {
+		return
+	}
+	s.metricsStorage.SaveRequestInfo(info)
+}
+
 type Metrics struct {
 	sync.Mutex
 	responseTimes map[string][]int64
